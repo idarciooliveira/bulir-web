@@ -55,6 +55,7 @@ export const authConfig: AuthOptions = {
     async session({ session, token }) {
         //@ts-expect-error undefined type
       session.user.accessToken = token.accessToken;
+
       return session;
     }
   },

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -16,7 +17,7 @@ export default function ProfileMenu() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>BU</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

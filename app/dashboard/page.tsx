@@ -1,9 +1,12 @@
-"use client";
+import ServiceList, { Service } from "@/components/custom/service-list";
+import { api } from "@/services/api";
 
-export default function Dashboard() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Welcome Back!</h1>
-    </div>
-  );
+const getServices = async () => {
+  const response = await api.get<Service[]>("/services");
+  return response.data;
+};
+
+export default async function Dashboard() {
+  const services = await getServices();
+  return <ServiceList services={services} />;
 }

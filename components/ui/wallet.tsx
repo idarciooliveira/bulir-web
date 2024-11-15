@@ -1,5 +1,6 @@
 import { api } from "@/services/api";
 import { Wallet } from "lucide-react";
+import { unstable_noStore } from "next/cache";
 
 type GetBalanceReponse = {
   balance: number;
@@ -14,6 +15,8 @@ const getWalletBalance = async () => {
     throw error; // or handle it appropriately
   }
 };
+
+unstable_noStore();
 
 export default async function WalletComponent() {
   const walletBalance = await getWalletBalance();

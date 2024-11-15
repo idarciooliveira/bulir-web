@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import WalletComponent from "@/components/ui/wallet";
 import ProfileMenu from "@/components/custom/profile-menu";
+import Link from "next/link";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -51,7 +52,9 @@ export default async function DashboardLayout({
           </div>
           <div className="flex items-center gap-4">
             <Suspense fallback={<div>Loading...</div>}>
-              <WalletComponent />
+              <Link href="/dashboard/wallet" className="hover:cursor-pointer">
+                <WalletComponent />
+              </Link>
             </Suspense>
 
             <ProfileMenu />
