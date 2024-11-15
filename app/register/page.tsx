@@ -27,37 +27,37 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { api } from "@/services/api";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
-// Define the form schema with Zod
 const registerSchema = z.object({
-  name: z
+  fullname: z
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must be less than 50 characters"),
   email: z.string().email("Please enter a valid email address"),
   nif: z
     .string()
-    .length(9, "NIF must be exactly 9 digits")
-    .regex(/^\d+$/, "NIF must contain only numbers"),
-  role: z.enum(["CUSTOMER", "PROVIDER"], {
+    .min(10, "NIF is incorrect")
+    .max(14, "NIF is incorrect")
+    .regex(/^(?:\d+|(?:\d*[A-Za-z]{1,2}\d*))$/, "NIF is incorrect"),
+  role: z.enum(["CUSTOMER", "SERVICE_PROVIDER"], {
     required_error: "Please select a role",
   }),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    ),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Register() {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      fullname: "",
       email: "",
       nif: "",
       role: undefined,
@@ -67,10 +67,24 @@ export default function Register() {
 
   async function onSubmit(data: RegisterFormValues) {
     try {
-      // Add your registration API call here
-      console.log(data);
-    } catch (error) {
-      console.error("Registration failed:", error);
+      await api.post("/users", data);
+      toast({
+        title: "Success",
+        description: "Account created successfully!",
+      });
+
+      router.push("/login");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.";
+
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      });
     }
   }
 
@@ -90,7 +104,7 @@ export default function Register() {
             <CardContent className="grid gap-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="fullname"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
@@ -147,7 +161,9 @@ export default function Register() {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="CUSTOMER">Customer</SelectItem>
-                        <SelectItem value="PROVIDER">Provider</SelectItem>
+                        <SelectItem value="SERVICE_PROVIDER">
+                          Provider
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
