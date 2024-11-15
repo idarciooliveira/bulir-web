@@ -36,11 +36,13 @@ export const authConfig: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        //@ts-expect-error undefined type
         token.accessToken = user.accessToken;
       }
       return token;
     },
     async session({ session, token }) {
+        //@ts-expect-error undefined type
       session.user.accessToken = token.accessToken;
       return session;
     }
