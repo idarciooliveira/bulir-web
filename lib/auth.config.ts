@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { AuthOptions } from "next-auth";
+import { AuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 type AuthenticateResponse = {
@@ -32,10 +32,11 @@ export const authConfig: AuthOptions = {
           if (user) {
             return {
               id: user.id,
+              name: user.fullname,
               email: user.email,
               accessToken: token,
               role: user.role
-            };
+            } as User;
           }
           return null;
         } catch (error) {
@@ -45,16 +46,26 @@ export const authConfig: AuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user}) {
       if (user) {
         //@ts-expect-error undefined type
         token.accessToken = user.accessToken;
+        token.id = user.id
+        //@ts-expect-error undefined type
+        token.role = user.role
       }
+
+      // console.log(token)
       return token;
     },
     async session({ session, token }) {
         //@ts-expect-error undefined type
-      session.user.accessToken = token.accessToken;
+        session.user.accessToken = token.accessToken;
+        //@ts-expect-error undefined type
+        session.user.role = token.role
+        //@ts-expect-error undefined type
+      session.user.id = token.id
+
 
       return session;
     }

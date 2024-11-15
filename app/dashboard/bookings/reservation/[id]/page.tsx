@@ -68,8 +68,8 @@ export default function Reservation() {
         </p>
         <p className="text-gray-600">{service?.description}</p>
         <DateTimePicker
-          value={dateTime}
-          onChange={setDateTime}
+          value={dateTime ?? undefined}
+          onChange={(date: Date | undefined) => setDateTime(date ?? null)}
           className="mt-4"
         />
         <Button

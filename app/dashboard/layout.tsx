@@ -51,8 +51,14 @@ export default async function DashboardLayout({
             <h1 className="text-xl font-semibold">Bulir</h1>
           </div>
           <div className="flex items-center gap-4">
+            <p className="text-sm">{session.user.role}</p>
             <Suspense fallback={<div>Loading...</div>}>
-              <Link href="/dashboard/wallet" className="hover:cursor-pointer">
+              <Link
+                href={
+                  session.user.role == "CUSTUMER" ? "/dashboard/wallet" : "#"
+                }
+                className="hover:cursor-pointer"
+              >
                 <WalletComponent />
               </Link>
             </Suspense>
@@ -67,9 +73,31 @@ export default async function DashboardLayout({
         {/* Sidebar - Desktop */}
         <aside className="hidden md:flex w-64 flex-col fixed left-0 h-[calc(100vh-4rem)] border-r bg-background p-4">
           <nav className="space-y-2">
-            <NavItem icon={<LayoutGrid className="h-5 w-5" />} label="Home" />
-            <NavItem icon={<Calendar className="h-5 w-5" />} label="Bookings" />
-            <NavItem icon={<Store className="h-5 w-5" />} label="Services" />
+            {session.user.role == "CUSTUMER" && (
+              <Link
+                className="w-full justify-start flex flex-row gap-2 h-8 text-base font-normal hover:bg-accent"
+                href={"/dashboard"}
+              >
+                <LayoutGrid className="h-5 w-5" />
+                Home
+              </Link>
+            )}
+            <Link
+              className="w-full justify-start flex flex-row gap-2 h-8 text-base font-normal hover:bg-accent"
+              href={"/dashboard/bookings"}
+            >
+              <Calendar className="h-5 w-5" />
+              Bookings
+            </Link>
+            {session.user.role == "SERVICE_PROVIDER" && (
+              <Link
+                className="w-full justify-start flex flex-row gap-2 h-8 text-base font-normal hover:bg-accent"
+                href={"/dashboard/services"}
+              >
+                <Store className="h-5 w-5" />
+                Services
+              </Link>
+            )}
           </nav>
         </aside>
 
