@@ -2,6 +2,16 @@ import { api } from "@/services/api";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+type AuthenticateResponse = {
+  user: {
+    id: string
+    fullname:string
+    email: string
+    role: string
+  }
+  token: string
+}
+
 export const authConfig: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -12,18 +22,19 @@ export const authConfig: AuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const response = await api.post('/auth/authenticate', {
+          const response = await api.post<AuthenticateResponse>('/auth/authenticate', {
             email: credentials?.email,
             password: credentials?.password,
           });
 
-          const user = response.data;
+          const { user, token } = response.data;
 
           if (user) {
             return {
               id: user.id,
               email: user.email,
-              accessToken: user.accessToken,
+              accessToken: token,
+              role: user.role
             };
           }
           return null;

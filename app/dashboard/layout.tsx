@@ -1,18 +1,14 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth.config";
+import { Suspense } from "react";
 
-import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { LayoutGrid, Calendar, Store, Menu, Wallet } from "lucide-react";
+import { LayoutGrid, Calendar, Store, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+import WalletComponent from "@/components/ui/wallet";
+import ProfileMenu from "@/components/custom/profile-menu";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -53,35 +49,12 @@ export default async function DashboardLayout({
             {/* Logo/Brand */}
             <h1 className="text-xl font-semibold">Bulir</h1>
           </div>
-
           <div className="flex items-center gap-4">
-            {/* Wallet Balance */}
-            <div className="hidden md:flex items-center gap-2 text-muted-foreground">
-              <Wallet className="h-4 w-4" />
-              <span>$1,234.56</span>
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <WalletComponent />
+            </Suspense>
 
-            {/* Profile Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut()}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ProfileMenu />
           </div>
         </div>
       </header>
