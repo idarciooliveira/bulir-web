@@ -20,9 +20,9 @@ import { useEffect, useState } from "react";
 import { ServiceForm } from "../page";
 
 const ServiceSchema = z.object({
-  name: z.string(),
-  price: z.coerce.number(),
-  description: z.string(),
+  name: z.string().min(1),
+  price: z.coerce.number().min(0),
+  description: z.string().min(10),
 });
 
 type ServiceSchemaFormValues = z.infer<typeof ServiceSchema>;
@@ -38,6 +38,7 @@ export default function EditService() {
     api
       .get<ServiceForm>(`/services/${params.id}`)
       .then((response) => {
+        console.log(response.data);
         setService(response.data);
       })
       .catch((err) => console.log(err));
@@ -45,10 +46,10 @@ export default function EditService() {
 
   const form = useForm<ServiceSchemaFormValues>({
     resolver: zodResolver(ServiceSchema),
-    defaultValues: {
-      name: service?.name,
-      price: service?.price,
-      description: service?.description,
+    values: {
+      name: service?.name ?? "",
+      price: service?.price ?? 0,
+      description: service?.description ?? "",
     },
   });
 
@@ -62,7 +63,6 @@ export default function EditService() {
         description,
         price,
         name,
-        userId: "",
       });
 
       if (response?.status == 200) {

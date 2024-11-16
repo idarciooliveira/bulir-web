@@ -18,9 +18,9 @@ import { useToast } from "@/hooks/use-toast";
 import { api } from "@/services/api";
 
 const ServiceSchema = z.object({
-  name: z.string({ required_error: "required field" }),
-  price: z.coerce.number({ required_error: "required field" }),
-  description: z.string({ required_error: "required field" }),
+  name: z.string().min(1),
+  price: z.coerce.number().min(0),
+  description: z.string().min(10),
 });
 
 type ServiceSchemaFormValues = z.infer<typeof ServiceSchema>;
