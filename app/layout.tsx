@@ -1,6 +1,8 @@
+import "react-day-picker/dist/style.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 

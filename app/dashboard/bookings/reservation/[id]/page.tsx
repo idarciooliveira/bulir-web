@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/style.css";
 
 export default function Reservation() {
   const router = useRouter();
