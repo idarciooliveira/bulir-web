@@ -1,6 +1,5 @@
 "use client";
 
-import { DateTimePicker } from "@/components/custom/datepickertime";
 import { Service } from "@/components/custom/service-list";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -9,6 +8,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 
 export default function Reservation() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function Reservation() {
       });
   }, []);
 
-  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [dateTime, setDateTime] = useState<Date>();
 
   const handleReservation = async () => {
     if (dateTime) {
@@ -67,11 +68,7 @@ export default function Reservation() {
           Price: {service?.price}
         </p>
         <p className="text-gray-600">{service?.description}</p>
-        <DateTimePicker
-          value={dateTime ?? undefined}
-          onChange={(date: Date | undefined) => setDateTime(date ?? null)}
-          className="mt-4"
-        />
+        <DayPicker mode="single" selected={dateTime} onSelect={setDateTime} />
         <Button
           onClick={handleReservation}
           className="mt-4 w-full bg-blue-500 text-white hover:bg-blue-600"

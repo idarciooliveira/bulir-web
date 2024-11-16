@@ -22,7 +22,7 @@ export type Booking = {
 
 type BookingListProps = {
   Bookings: Booking[];
-  userRole: string;
+  userRole: string | undefined;
 };
 
 export enum BookingStatus {
